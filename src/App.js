@@ -1,7 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
+import { fetchData } from './actions/actions.tsx';
+
 
 function App() {
+  fetchData()
   return (
     <div className="App">
       <header className="App-header">
