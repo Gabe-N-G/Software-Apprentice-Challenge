@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { fetchData } from './actions/actions.tsx';
+import Toolbar from './components/Toolbar.jsx';
+import Cards from './components/Card.jsx';
 
 
 function App() {
   const [cards, setCards] = useState([]);
+  //allcards used for resetting filters/sorts
   const [allCards, setAllCards] = useState([])
 
 
@@ -13,13 +16,11 @@ function App() {
       setCards(data);
       setAllCards(data)
     };
-
     loadData();
   }, []);
 
-
+  //getting unique campaign names for select field
   const uniqueCamp = [...new Set(allCards.map(card => card.campaign))]
-  console.log(uniqueCamp)
 
 
   const sortAsc = () => {
@@ -56,81 +57,15 @@ function App() {
       </header>
 
       <main className="p-6">
-       <div
-          id="Toolbar"
-          className="flex flex-wrap items-center gap-4 bg-white p-4 rounded-md shadow-sm"
-        >
-          <span className="font-semibold text-gray-700">Sort By:</span>
+        <Toolbar
+          sortAsc={sortAsc}
+          sortDesc={sortDesc}
+          reset={reset}
+          filterCamp={filterCamp}
+          uniqueCamp={uniqueCamp}
+        />
 
-          <div className="flex items-center space-x-2">
-            <span className="text-gray-600">Spend:</span>
-            <button
-              onClick={sortAsc}
-              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Ascending
-            </button>
-            <button
-              onClick={sortDesc}
-              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Descending
-            </button>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <label
-              htmlFor="campaign"
-              className="text-gray-600 font-medium"
-            >
-              Select Campaign:
-            </label>
-            
-            <select
-              name="campaign"
-              id="campaign"
-              onChange={filterCamp}
-              className="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              <option value="all">All</option>
-              {uniqueCamp.map((camp) => (
-                <option key={camp} value={camp}>
-                  {camp}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-              onClick={reset}
-              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Reset
-            </button>
-        </div>
-
-
-        <div id="cardContainer" className="grid gap-6 mt-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {cards.length > 0 ? (
-            cards.map((card, idx) => (
-              <div
-                className="bg-white rounded-lg shadow-md p-4 border border-gray-200"
-                key={idx}
-              >
-                <p className="font-semibold">Source: <span className="font-normal">{card.type}</span></p>
-                <p className="font-semibold">Campaign: <span className="font-normal">{card.campaign}</span></p>
-                <p className="font-semibold">Adset: <span className="font-normal">{card.adset}</span></p>
-                <p className="font-semibold">Creative: <span className="font-normal">{card.creative}</span></p>
-                <p className="font-semibold">Spend: <span className="font-normal">${card.spend}</span></p>
-                <p className="font-semibold">Impressions: <span className="font-normal">{card.impressions}</span></p>
-                <p className="font-semibold">Clicks: <span className="font-normal">{card.clicks}</span></p>
-                <p className="font-semibold">Google Results: <span className="font-normal">{card.google_results}</span></p>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-500">Now loading...</p>
-          )}
-        </div>
+        <Cards cards={cards} />
       </main>
     </div>
   );
