@@ -38,7 +38,7 @@ function App() {
   }
 
   const filterCamp = (e) => {
-    console.log(allCards, cards)
+    // console.log(allCards, cards)
     if(e.target.value === "all"){
       setCards([...allCards])
     } else {
@@ -68,7 +68,7 @@ function App() {
         <Cards cards={cards} />
       </main>
     </div>
-  );
+  )
 }
 
 export default App;

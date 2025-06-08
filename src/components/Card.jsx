@@ -35,7 +35,8 @@ const Cards = ({ cards }) => {
             Clicks: <span className="font-normal">{card.clicks}</span>
           </p>
           <p className="font-semibold">
-            Google Results: <span className="font-normal">{card.google_results}</span>
+            Google Results:{" "}
+            <span className="font-normal">{card.google_results}</span>
           </p>
         </div>
       ))}
