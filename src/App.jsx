@@ -14,6 +14,21 @@ function App() {
     loadData();
   }, []);
 
+  const uniqueCamp = [...new Set(cards.map(card => card.campaign))]
+  console.log(uniqueCamp)
+
+
+  const sortAsc = () => {
+    let sorted = [...cards].sort((a,b) => a.spend - b.spend)
+    setCards(sorted)
+  }
+  
+  const sortDesc = () => {
+    let sorted = [...cards].sort((a,b) => b.spend - a.spend)
+    setCards(sorted)
+  }
+
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
       <header className="bg-blue-600 text-white py-6 shadow-md">
@@ -23,8 +38,20 @@ function App() {
       </header>
 
       <main className="p-6">
-        <Toolbar />
+        <div>
+          Sort By: 
+          Spend:  <button onClick={sortAsc}>Ascending</button>
+           <button onClick={sortDesc}>Descending</button>
+           <label for="campaignSelect">Select Campaign:</label>
 
+           <select name="campaign" id="campaign">
+              <option value="all">All</option>
+              {uniqueCamp.map((camp) => (
+                <option value={camp}>{camp}</option>
+              ))}
+           </select>
+          
+        </div>
         <div className="grid gap-6 mt-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {cards.length > 0 ? (
             cards.map((card, idx) => (
