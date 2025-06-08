@@ -20,7 +20,7 @@ export async function fetchData() {
     console.log(res.data)
     const norm = normalizeData(res.data);
     const cards = addGoogle(res.data.google_analytics, norm)
-    console.log(cards.filter((e)=>e.google_results==0))
+    return cards
   } catch (err) {
     console.error(err);
   }
@@ -44,10 +44,13 @@ function normalizeData(data){
       //  console.log(cards)
     }
     for(const snap of data.snapchat_ads){
+      //removing the words Squad from the adset value.
+        let snapAdset = snap.ad_squad_name.split(" ").slice(0,2).join(" ")
+        // console.log(snapAdset)
         const ad: Card = {
           type: "Snapchat",
           campaign: snap.campaign_name,
-          adset: snap.ad_squad_name,
+          adset: snapAdset,
           creative: snap.creative_name,
           impressions: snap.impressions,
           spend: snap.cost,
@@ -55,7 +58,6 @@ function normalizeData(data){
           google_results: 0,
         }
        cards.push(ad)
-      //  console.log(cards)
     }
     for(const tweet of data.twitter_ads){
         const ad: Card = {
@@ -77,10 +79,13 @@ function normalizeData(data){
 function addGoogle(google, cards){
   console.log(cards)
   for(const goo of google){
-    let match = cards.filter((card) => (goo.utm_campaign === card.campaign && goo.utm_medium === card.adset && goo.utm_content === card.creative))
-    if (match){
-      console.log(goo,match)
-      match.google_results += goo.results
+    let matches = cards.filter((card) => (goo.utm_campaign === card.campaign && goo.utm_medium === card.adset && goo.utm_content === card.creative))
+    //when doing this I found that there were multiple matches per google analytics, this is how I went through them.
+    console.log(matches, goo)
+    if (matches){
+      for(const match of matches){
+        match.google_results = goo.results
+      }
     }else{
       console.log("no match")
     }
