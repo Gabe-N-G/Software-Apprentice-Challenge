@@ -84,7 +84,7 @@ function addGoogle(google, cards){
     console.log(matches, goo)
     if (matches){
       for(const match of matches){
-        match.google_results = goo.results
+        match.google_results += goo.results
       }
     }else{
       console.log("no match")
