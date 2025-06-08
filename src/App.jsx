@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
 import { fetchData } from './actions/actions.tsx';
-import Toolbar from './components/Toolbar.jsx';
+
 
 function App() {
   const [cards, setCards] = useState([]);
+  const [allCards, setAllCards] = useState([])
+
 
   useEffect(() => {
     const loadData = async () => {
       const data = await fetchData();
       setCards(data);
+      setAllCards(data)
     };
 
     loadData();
   }, []);
 
-  const uniqueCamp = [...new Set(cards.map(card => card.campaign))]
+
+  const uniqueCamp = [...new Set(allCards.map(card => card.campaign))]
   console.log(uniqueCamp)
 
 
@@ -28,6 +32,20 @@ function App() {
     setCards(sorted)
   }
 
+  const reset = () => {
+    setCards(allCards)
+  }
+
+  const filterCamp = (e) => {
+    console.log(allCards, cards)
+    if(e.target.value === "all"){
+      setCards([...allCards])
+    } else {
+      setCards([...allCards].filter((card) => card.campaign === e.target.value)
+    )}
+     
+  }
+ 
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
@@ -38,21 +56,61 @@ function App() {
       </header>
 
       <main className="p-6">
-        <div>
-          Sort By: 
-          Spend:  <button onClick={sortAsc}>Ascending</button>
-           <button onClick={sortDesc}>Descending</button>
-           <label for="campaignSelect">Select Campaign:</label>
+       <div
+          id="Toolbar"
+          className="flex flex-wrap items-center gap-4 bg-white p-4 rounded-md shadow-sm"
+        >
+          <span className="font-semibold text-gray-700">Sort By:</span>
 
-           <select name="campaign" id="campaign">
+          <div className="flex items-center space-x-2">
+            <span className="text-gray-600">Spend:</span>
+            <button
+              onClick={sortAsc}
+              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Ascending
+            </button>
+            <button
+              onClick={sortDesc}
+              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Descending
+            </button>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <label
+              htmlFor="campaign"
+              className="text-gray-600 font-medium"
+            >
+              Select Campaign:
+            </label>
+            
+            <select
+              name="campaign"
+              id="campaign"
+              onChange={filterCamp}
+              className="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
               <option value="all">All</option>
               {uniqueCamp.map((camp) => (
-                <option value={camp}>{camp}</option>
+                <option key={camp} value={camp}>
+                  {camp}
+                </option>
               ))}
-           </select>
-          
+            </select>
+          </div>
+
+          <button
+              onClick={reset}
+              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Reset
+            </button>
         </div>
-        <div className="grid gap-6 mt-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+
+        <div id="cardContainer" className="grid gap-6 mt-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {cards.length > 0 ? (
             cards.map((card, idx) => (
               <div
