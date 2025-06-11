@@ -35,6 +35,8 @@ function App() {
 
   const reset = () => {
     setCards(allCards)
+    const select = document.getElementById("campaign")
+    select.value = "all"
   }
 
   const filterCamp = (e) => {

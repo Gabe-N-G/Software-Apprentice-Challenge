@@ -16,7 +16,7 @@ type Card = { //alias with standardized names
 export async function fetchData() {
   try {
     const res = await axios.get(backend_URL);
-    console.log(res.data);
+    // console.log(res.data);
     const norm = normalizeData(res.data);
     const cards = addGoogle(res.data.google_analytics, norm);
     return cards;
